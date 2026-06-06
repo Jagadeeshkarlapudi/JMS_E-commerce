@@ -5,6 +5,7 @@ import {  MessageCircleMore } from "lucide-react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { API_ENDPOINTS } from "../../api/endpoints";
 
 import "swiper/css";
 // import "./BestSellers.css";
@@ -14,10 +15,11 @@ const BestSellers = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/bestsellers")
+      .get(API_ENDPOINTS.bestsellers)
       .then((res) => {
         const best = res.data.filter((item) => item.bestseller);
         setProducts(best);
+        console.log(best)
       })
       .catch((err) => console.log(err));
   }, []);

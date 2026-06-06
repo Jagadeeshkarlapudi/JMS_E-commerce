@@ -6,6 +6,7 @@ import WhatsAppButton from "../components/Whatsapp";
 import Topbar from "../components/Topbar";
 import Navbar from "../components/navbar";
 // import "./faq.css";
+import { API_ENDPOINTS } from "../../api/endpoints";
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);
@@ -15,10 +16,10 @@ const FAQ = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/faqData?_limit=4")
+      .get(API_ENDPOINTS.faq)
       .then((response) => {
         console.log(response)
-        setFaqs(response.data);
+       setFaqs(response.data.slice(0, 4));
         setLoading(false);
       })
       .catch((err) => {

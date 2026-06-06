@@ -3,20 +3,21 @@ import Footer from "../components/Footer";
 import Navbar from "../components/navbar";
 import Topbar from "../components/Topbar";
 import WhatsAppButton from "../components/Whatsapp";
-import { MessageCircleMore } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import axios from "axios";
+import { API_ENDPOINTS } from "../../api/endpoints";
 
 
 function Powders() {
     const [powders, setpowders] = useState([]);
           const [loading, setLoading] = useState(true);
         
-          const API_URL = "http://localhost:4000/productss"; 
+          // const API_URL = "http://localhost:4000/productss"; 
           // replace with your correct local IP if needed
         
           useEffect(() => {
             axios
-              .get(API_URL)
+              .get(API_ENDPOINTS.productss)
               .then((res) => {
                 const filtered = res.data.filter(
                   (item) => item.category === "Powders"
@@ -30,14 +31,23 @@ function Powders() {
               });
           }, []);
         
-          const phoneNumber = "916300692846";
-        
-          const handleClick = (productName) => {
-            const message = `Hello, I want to know more about ${productName}`;
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, "_blank");
-          };
-        
+             const addToCart = (item) => {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingItem = cart.find((i) => i.id === item.id);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push({ ...item, quantity: 1 });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // 🔥 Update cart count globally (important)
+  window.dispatchEvent(new Event("cartUpdated"));
+};
+     
     return ( 
         <div>
             <Topbar/>
@@ -76,12 +86,12 @@ function Powders() {
                       </span>
                     </div>
 
-                    <button
-                      className="cart-btn"
-                      onClick={() => handleClick(item.name)}
-                    >
-                      <MessageCircleMore size={20} />
-                    </button>
+                                 <button
+  className="cart-btn"
+  onClick={() => addToCart(item)}
+>
+  <ShoppingCart size={20} />
+</button>
                   </div>
                 </div>
               </div>

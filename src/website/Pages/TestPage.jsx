@@ -5,7 +5,7 @@ function TestPage() {
     const[jms,setjms] = useState([])
 
     useEffect(()=>{
-        axios.get("https://jms.nivsee.com/api/v1/check").then((res)=>{
+        axios.get("https://api.jyothimilletsnacks.in/api/v1/check").then((res)=>{
             console.log(res)
         }).catch((err)=>{
             console.log(err)

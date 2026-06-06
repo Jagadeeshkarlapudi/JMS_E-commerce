@@ -20,6 +20,12 @@ import Pappads from './website/Pages/Pappads';
 import Sweets from './website/Pages/Sweets';
 import Powders from './website/Pages/Powders';
 import TestPage from './website/Pages/TestPage';
+import Rosted from './website/Pages/Rosted';
+import ProductDetails from './website/Pages/ProductDetails';
+import Signup from './website/components/Signup';
+import Login from './website/components/Login';
+import Cart from './website/Pages/Cart';
+import CategoryPage from './website/Pages/CategoryPage';
 
 const router = createBrowserRouter([
   {
@@ -73,6 +79,30 @@ const router = createBrowserRouter([
   {
     path:"test",
     element:<TestPage/>
+  },
+  {
+    path:"rosted",
+    element:<Rosted/>
+  },
+  {
+    path:"product/:id",
+    element:<ProductDetails/>
+  },
+  {
+    path:"signup",
+    element:<Signup/>
+  },
+  {
+    path:"login",
+    element:<Login/>
+  },
+  {
+    path:"cart",
+    element:<Cart/>
+  },
+  {
+    path:"/category/:slug/",
+    element:<CategoryPage/>
   }
 
 ]);

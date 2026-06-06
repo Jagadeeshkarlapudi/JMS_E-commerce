@@ -1,93 +1,185 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { MessageCircleMore } from "lucide-react";
-// import "./Specialities.css";
-
+import { ShoppingCart } from "lucide-react";
+import { API_ENDPOINTS } from "../../api/endpoints";
+import { useNavigate } from "react-router-dom";
+import ProductCard from "./ProductCard";
 const Specialities = () => {
   const [products, setProducts] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("Sweets");
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
+  // Fetch all products initially
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/products")
-      .then((res) => {
-        setProducts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("Error fetching specialities:", err);
-        setLoading(false);
-      });
+    fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter(
-    (item) => item.category === activeCategory
+  // Fetch all products
+const fetchProducts = async () => {
+  try {
+    setLoading(true);
+
+    const res = await axios.get(API_ENDPOINTS.products);
+
+    const data = res.data?.data || [];
+
+    // Set Products
+    setProducts(data);
+
+    // Create Dynamic Categories
+    const uniqueCategories = [];
+
+    data.forEach((item) => {
+      const slug = item.category_name
+        ?.toLowerCase()
+        .replace(/\s+/g, "-");
+
+      const exists = uniqueCategories.find(
+        (cat) => cat.slug === slug
+      );
+
+      if (!exists) {
+        uniqueCategories.push({
+          name: item.category_name,
+          slug: slug,
+        });
+      }
+    });
+
+    setCategories(uniqueCategories);
+
+    setLoading(false);
+  } catch (error) {
+    console.log(error);
+    setLoading(false);
+  }
+};
+
+  // Fetch products by category
+const fetchCategoryProducts = async (slug) => {
+  try {
+    setLoading(true);
+
+    setActiveCategory(slug);
+
+    const res = await axios.get(
+      API_ENDPOINTS.productsByCategory(slug)
+    );
+
+    const data = Array.isArray(res.data)
+      ? res.data
+      : res.data?.data || [];
+
+    setProducts(data);
+
+    setLoading(false);
+  } catch (err) {
+    console.log(err);
+    setLoading(false);
+  }
+};
+
+  // Add To Cart
+  // const addToCart = (item) => {
+  //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  //   const existingItem = cart.find((i) => i.id === item.id);
+
+  //   if (existingItem) {
+  //     existingItem.quantity += 1;
+  //   } else {
+  //     cart.push({ ...item, quantity: 1 });
+  //   }
+
+  //   localStorage.setItem("cart", JSON.stringify(cart));
+
+  //   window.dispatchEvent(new Event("cartUpdated"));
+  // };
+const addToCart = (item) => {
+
+  let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingItem = cart.find(
+    (i) =>
+      i.id === item.id &&
+      i.selectedVariant?.id ===
+        item.selectedVariant?.id
   );
 
-  const phoneNumber = "916300692846";
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      ...item,
+      quantity: 1,
+    });
+  }
 
-  const handleClick = (productName) => {
-    const message = `Hello, I want to know more about ${productName}`;
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
-  };
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(cart)
+  );
+};
 
   return (
     <section className="specialities-section">
       <div className="container">
+
+        {/* Heading */}
         <div className="section-header">
           <h2>Our Specialities</h2>
-          <p>
-            Explore our delicious handcrafted favorites made with authentic taste.
-          </p>
         </div>
 
-        <div className="category-buttons">
-          {["Sweets", "Namkeens", "Pappads", "Pickels", "Powders"].map(
-            (category) => (
-              <button
-                key={category}
-                className={activeCategory === category ? "active" : ""}
-                onClick={() => setActiveCategory(category)}
-              >
-                {category === "Pappads" ? "Papads" : category}
-              </button>
-            )
-          )}
+        {/* Category Pills */}
+        <div className="category-pills">
+
+          {/* All Button */}
+          <button
+            className={`pill ${
+              activeCategory === null ? "active-pill" : ""
+            }`}
+            onClick={fetchProducts}
+          >
+            All
+          </button>
+
+          {categories.map((cat, index) => (
+            <button
+              key={index}
+              className={`pill ${
+                activeCategory === cat.slug
+                  ? "active-pill"
+                  : ""
+              }`}
+              onClick={() =>
+                fetchCategoryProducts(cat.slug)
+              }
+            >
+              {cat.name}
+            </button>
+          ))}
         </div>
 
-        {loading ? (
-          <p className="loading-text">Loading specialities...</p>
-        ) : (
-          <div className="specialities-grid">
-            {filteredProducts.map((item) => (
-              <div className="speciality-card" key={item.id}>
-                <div className="speciality-image">
-                  <img src={item.image} alt={item.name} />
-                </div>
+        {/* Products */}
+         {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="specialities-grid">
 
-                <div className="speciality-content">
-                  <h3 className="product-title">{item.name}</h3>
+          {products.map((item) => (
+            <ProductCard
+              key={item.id}
+              item={item}
+              addToCart={addToCart}
+            />
+          ))}
 
-                  <div className="speciality-bottom">
-                    <div className="price-box">
-                      <span className="base-price">₹{item.base_price}</span>
-                      <span className="discount-price">₹{item.discount_price}</span>
-                    </div>
-
-                    <button
-                      className="cart-btn"
-                      onClick={() => handleClick(item.name)}
-                    >
-                      <MessageCircleMore size={20} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        </div>
+      )}
       </div>
     </section>
   );

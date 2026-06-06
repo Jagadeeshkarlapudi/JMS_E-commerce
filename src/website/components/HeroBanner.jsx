@@ -15,24 +15,24 @@ const bannerData = [
     title: "Authentic Andhra Pickles",
     subtitle: "Homemade Taste with Traditional Flavours",
     buttonText: "Shop Now",
-    desktopImage: "./pickels.jpeg",
-    mobileImage: "./pickelsmobile.jpeg",
+    desktopImage: "./pickelsbanner.jpeg",
+    mobileImage: "./pickelsmobilebanner.jpeg",
   },
   {
     id: 2,
     title: "Fresh Traditional Sweets",
     subtitle: "Delicious Treats for Every Celebration",
     buttonText: "Order Now",
-    desktopImage: "./namekeens.jpeg",
-    mobileImage: "./namkeensmobile.jpeg",
+    desktopImage: "./sweetsbanner.jpeg",
+    mobileImage: "./sweetsmobilebanner.jpeg",
   },
   {
     id: 3,
     title: "Crispy Namkeens & Snacks",
     subtitle: "Perfect Crunch for Your Tea-Time Cravings",
     buttonText: "Buy Now",
-    desktopImage: "./namekeens.jpeg",
-    mobileImage: "./namkeensmobile.jpeg",
+    desktopImage: "./namkeensbanner.jpeg",
+    mobileImage: "./namkeensmobilebanner.jpeg",
   },
 ];
 
@@ -71,11 +71,11 @@ const bannerData = [
               />
 
               {/* Text Content */}
-              <div className="hero-content">
+              {/* <div className="hero-content">
                 <p className="hero-subtitle">{item.subtitle}</p>
                 <h1 className="hero-title">{item.title}</h1>
                 <button className="hero-btn">{item.buttonText}</button>
-              </div>
+              </div> */}
             </div>
           </SwiperSlide>
         ))}

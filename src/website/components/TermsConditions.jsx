@@ -114,7 +114,7 @@ const TermsConditions = () => {
 
         <section>
           <h2>10. Contact Information</h2>
-          <p>Email: support@jyothimilletsnacks.com</p>
+          <p>Mail: support@jyothimilletsnacks.in</p>
           <p>Phone: 6300692846</p>
         </section>
       </div>

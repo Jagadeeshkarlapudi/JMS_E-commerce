@@ -61,7 +61,7 @@ const RefundReturns = () => {
 
         <section>
           <h2>7. Contact for Returns</h2>
-          <p>Email: support@jyothimilletsnacks.com</p>
+          <p>Mail: support@jyothimilletsnacks.in</p>
           <p>Phone: 6300692846</p>
         </section>
       </div>
